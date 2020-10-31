@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paradox-app
+  labels:
+    app: paradox-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paradox-app
+  template:
+    metadata:
+      labels:
+         app: paradox-app
+    spec:
+      containers: 
+        - image:  {REPOSITORY}/paradoxsvc:v{BUILD}
+          name: paradox-app
+          imagePullPolicy: Always
+          ports:
+          - name: paradox-app
+            containerPort: 8080
+          resources:
+            requests:
+                cpu: "300m"
+                memory: "1850Mi" 
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: rpaacr-secret4
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: paradox-app-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: paradox-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: paradox-app
+

@@ -32,4 +32,8 @@ public class AuthController {
 		return authService.registerUser(signupRequest);
 	}
 
+	@PostMapping("/test")
+	public String test() {
+		return "Success";
+	}
 }
